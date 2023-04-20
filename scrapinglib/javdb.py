@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+
+from lib2to3.pgen2.token import NUMBER
 import re
 from urllib.parse import urljoin
 from lxml import etree
@@ -10,35 +12,35 @@ from .parser import Parser
 class Javdb(Parser):
     source = 'javdb'
 
-    expr_number = '//strong[contains(text(),"番號")]/../span/text()'
-    expr_number2 = '//strong[contains(text(),"番號")]/../span/a/text()'
+    expr_number = '//strong[contains(text(),"ID")]/../span/text()'
+    expr_number2 = '//strong[contains(text(),"ID")]/../span/a/text()'
     expr_title = "/html/head/title/text()"
     expr_title_no = '//*[contains(@class,"movie-list")]/div/a/div[contains(@class, "video-title")]/text()'
-    expr_runtime = '//strong[contains(text(),"時長")]/../span/text()'
-    expr_runtime2 = '//strong[contains(text(),"時長")]/../span/a/text()'
-    expr_uncensored = '//strong[contains(text(),"類別")]/../span/a[contains(@href,"/tags/uncensored?") or contains(@href,"/tags/western?")]'
+    expr_runtime = '//strong[contains(text(),"Duration")]/../span/text()'
+    expr_runtime2 = '//strong[contains(text(),"Duration")]/../span/a/text()'
+    expr_uncensored = '//strong[contains(text(),"Tags")]/../span/a[contains(@href,"/tags/uncensored?") or contains(@href,"/tags/western?")]'
     expr_actor = '//span[@class="value"]/a[contains(@href,"/actors/")]/text()'
     expr_actor2 = '//span[@class="value"]/a[contains(@href,"/actors/")]/../strong/@class'
-    expr_release = '//strong[contains(text(),"日期")]/../span/text()'
+    expr_release = '//strong[contains(text(),"Released Date")]/../span/text()'
     expr_release_no = '//*[contains(@class,"movie-list")]/div/a/div[contains(@class, "meta")]/text()'
-    expr_studio = '//strong[contains(text(),"片商")]/../span/a/text()'
-    expr_studio2 = '//strong[contains(text(),"賣家:")]/../span/a/text()'
-    expr_director = '//strong[contains(text(),"導演")]/../span/text()'
-    expr_director2 = '//strong[contains(text(),"導演")]/../span/a/text()'
+    expr_studio = '//strong[contains(text(),"Maker")]/../span/a/text()'
+    expr_studio2 = '//strong[contains(text(),"Seller:")]/../span/a/text()'
+    expr_director = '//strong[contains(text(),"Director")]/../span/text()'
+    expr_director2 = '//strong[contains(text(),"Director")]/../span/a/text()'
     expr_cover = "//div[contains(@class, 'column-video-cover')]/a/img/@src"
     expr_cover2 = "//div[contains(@class, 'column-video-cover')]/img/@src"
     expr_cover_no = '//*[contains(@class,"movie-list")]/div/a/div[contains(@class, "cover")]/img/@src'
-    expr_trailer = '//span[contains(text(),"預告片")]/../../video/source/@src'
+    expr_trailer = '//span[contains(text(),"Trailer")]/../../video/source/@src'
     expr_extrafanart = "//article[@class='message video-panel']/div[@class='message-body']/div[@class='tile-images preview-images']/a[contains(@href,'/samples/')]/@href"
-    expr_tags = '//strong[contains(text(),"類別")]/../span/a/text()'
-    expr_tags2 = '//strong[contains(text(),"類別")]/../span/text()'
-    expr_series = '//strong[contains(text(),"系列")]/../span/text()'
-    expr_series2 = '//strong[contains(text(),"系列")]/../span/a/text()'
-    expr_label = '//strong[contains(text(),"系列")]/../span/text()'
-    expr_label2 = '//strong[contains(text(),"系列")]/../span/a/text()'
+    expr_tags = '//strong[contains(text(),"Tags")]/../span/a/text()'
+    expr_tags2 = '//strong[contains(text(),"Tags")]/../span/text()'
+    expr_series = '//strong[contains(text(),"Series")]/../span/text()'
+    expr_series2 = '//strong[contains(text(),"Series")]/../span/a/text()'
+    expr_label = '//strong[contains(text(),"Series")]/../span/text()'
+    expr_label2 = '//strong[contains(text(),"Series")]/../span/a/text()'
     expr_userrating = '//span[@class="score-stars"]/../text()'
     expr_uservotes = '//span[@class="score-stars"]/../text()'
-    expr_actorphoto = '//strong[contains(text(),"演員:")]/../span/a[starts-with(@href,"/actors/")]'
+    expr_actorphoto = '//strong[contains(text(),"Actor(s):")]/../span/a[starts-with(@href,"/actors/")]'
 
     def extraInit(self):
         self.fixstudio = False
@@ -57,7 +59,7 @@ class Javdb(Parser):
         if core.dbcookies:
             self.cookies = core.dbcookies
         else:
-            self.cookies =  {'over18':'1', 'theme':'auto', 'locale':'zh'}
+            self.cookies =  {'over18':'1', 'theme':'auto', 'locale':'en'}
         if core.dbsite:
             self.dbsite = core.dbsite
         else:
@@ -71,7 +73,7 @@ class Javdb(Parser):
         else:
             self.detailurl = self.queryNumberUrl(number)
         self.deatilpage = self.session.get(self.detailurl).text
-        if '此內容需要登入才能查看或操作' in self.deatilpage or '需要VIP權限才能訪問此內容' in self.deatilpage:
+        if 'This content requires login to view' in self.deatilpage or 'VIP permission is required to watch the movie' in self.deatilpage:
             self.noauth = True
             self.imagecut = 0
             result = self.dictformat(self.querytree)
@@ -81,9 +83,10 @@ class Javdb(Parser):
         return result
 
     def queryNumberUrl(self, number):
-        javdb_url = 'https://' + self.dbsite + '.com/search?q=' + number + '&f=all'
+        javdb_url = 'https://' + self.dbsite + '.com/search?f=all%3Flocale%3Den&locale=en&q=' + number
         try:
-            resp = self.session.get(javdb_url)
+            headers = {'Accept-Language': 'en'}
+            resp = self.session.get(javdb_url, headers=headers)
         except Exception as e:
             #print(e)
             raise Exception(f'[!] {self.number}: page not fond in javdb')
@@ -171,7 +174,7 @@ class Javdb(Parser):
                 r.append(act)
             idx = idx + 1
         if re.match(r'FC2-[\d]+', self.number, re.A) and not r:
-            r = '素人'
+            r = 'Amateur'
             self.fixstudio = True
         return r
 

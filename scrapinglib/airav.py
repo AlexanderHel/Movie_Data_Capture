@@ -2,6 +2,7 @@
 
 import json
 import re
+from lxml import etree
 from .parser import Parser
 from .javbus import Javbus
 
@@ -28,7 +29,7 @@ class Airav(Parser):
         if self.specifiedUrl:
             self.detailurl = self.specifiedUrl
         else:
-            self.detailurl = "https://www.airav.wiki/api/video/barcode/" + self.number.upper() + "?lng=zh-CN"
+            self.detailurl = "https://en.airav.wiki/api/video/barcode/" + self.number.upper()
         if self.addtion_Javbus:
             engine = Javbus()
             javbusinfo = engine.scrape(self.number, self)

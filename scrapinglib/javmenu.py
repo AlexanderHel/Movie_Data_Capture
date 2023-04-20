@@ -31,7 +31,7 @@ class Javmenu(Parser):
         if self.specifiedUrl:
             self.detailurl = self.specifiedUrl
         else:
-            self.detailurl = 'https://javmenu.com/zh/' + self.number + '/'
+            self.detailurl = 'https://javmenu.com/en/' + self.number + '/'
         self.htmlcode = self.getHtml(self.detailurl)
         if self.htmlcode == 404:
             return 404
@@ -55,7 +55,7 @@ class Javmenu(Parser):
         # 删除番号
         number = re.findall("\d+",self.number)[1]
         title = browser_title.split(number,1)[-1]
-        title = title.replace(' | JAV目錄大全 | 每日更新',"")
-        title = title.replace(' | JAV目录大全 | 每日更新',"").strip()
+        title = title.replace(' | JAV Menu | Update Daily',"")
+        title = title.replace(' | JAV Menu | Update Daily',"").strip()
         return title.replace(self.number, '').strip()
     

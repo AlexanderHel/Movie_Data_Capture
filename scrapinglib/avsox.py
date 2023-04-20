@@ -6,17 +6,17 @@ from .parser import Parser
 class Avsox(Parser):
     source = 'avsox'
 
-    expr_number = '//span[contains(text(),"识别码:")]/../span[2]/text()'
+    expr_number = '//span[contains(text(),"ID:")]/../span[2]/text()'
     expr_actor = '//a[@class="avatar-box"]'
     expr_actorphoto = '//a[@class="avatar-box"]'
     expr_title = '/html/body/div[2]/h3/text()'
-    expr_studio = '//p[contains(text(),"制作商: ")]/following-sibling::p[1]/a/text()'
-    expr_release = '//span[contains(text(),"发行时间:")]/../text()'
+    expr_studio = '//p[contains(text(),"Studio: ")]/following-sibling::p[1]/a/text()'
+    expr_release = '//span[contains(text(),"Release Date:")]/../text()'
     expr_cover = '/html/body/div[2]/div[1]/div[1]/a/img/@src'
     expr_smallcover = '//*[@id="waterfall"]/div/a/div[1]/img/@src'
     expr_tags = '/html/head/meta[@name="keywords"]/@content'
-    expr_label = '//p[contains(text(),"系列:")]/following-sibling::p[1]/a/text()'
-    expr_series = '//span[contains(text(),"系列:")]/../span[2]/text()'
+    expr_label = '//p[contains(text(),"Series:")]/following-sibling::p[1]/a/text()'
+    expr_series = '//span[contains(text(),"Series:")]/../span[2]/text()'
 
     def extraInit(self):
         self.imagecut = 3
@@ -27,15 +27,15 @@ class Avsox(Parser):
         if 'FC2' in upnum and 'FC2-PPV' not in upnum:
             number = upnum.replace('FC2', 'FC2-PPV')
             self.number = number
-        qurySiteTree = self.getHtmlTree('https://tellme.pw/avsox')
+        qurySiteTree = self.getHtmlTree('https://avsox.click/en')
         site = self.getTreeElement(qurySiteTree, '//div[@class="container"]/div/a/@href')
-        self.searchtree = self.getHtmlTree(site + '/cn/search/' + number)
+        self.searchtree = self.getHtmlTree('https://avsox.click/en' + '/search/' + number)
         result1 = self.getTreeElement(self.searchtree, '//*[@id="waterfall"]/div/a/@href')
         if result1 == '' or result1 == 'null' or result1 == 'None':
-            self.searchtree = self.getHtmlTree(site + '/cn/search/' + number.replace('-', '_'))
+            self.searchtree = self.getHtmlTree('https://avsox.click/en' + '/search/' + number.replace('-', '_'))
             result1 = self.getTreeElement(self.searchtree, '//*[@id="waterfall"]/div/a/@href')
             if result1 == '' or result1 == 'null' or result1 == 'None':
-                self.searchtree = self.getHtmlTree(site + '/cn/search/' + number.replace('_', ''))
+                self.searchtree = self.getHtmlTree('https://avsox.click/en' + '/search/' + number.replace('_', ''))
                 result1 = self.getTreeElement(self.searchtree, '//*[@id="waterfall"]/div/a/@href')
         return "https:" + result1
 

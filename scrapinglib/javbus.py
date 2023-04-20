@@ -14,11 +14,11 @@ class Javbus(Parser):
 
     expr_number = '/html/head/meta[@name="keywords"]/@content'
     expr_title = '/html/head/title/text()'
-    expr_studio = '//span[contains(text(),"製作商:")]/../a/text()'
+    expr_studio = '//span[contains(text(),"Studio:")]/../a/text()'
     expr_studio2 = '//span[contains(text(),"メーカー:")]/../a/text()'
-    expr_director = '//span[contains(text(),"導演:")]/../a/text()'
+    expr_director = '//span[contains(text(),"Director:")]/../a/text()'
     expr_directorJa = '//span[contains(text(),"監督:")]/../a/text()'
-    expr_series = '//span[contains(text(),"系列:")]/../a/text()'
+    expr_series = '//span[contains(text(),"Series:")]/../a/text()'
     expr_series2 = '//span[contains(text(),"シリーズ:")]/../a/text()'
     expr_label = '//span[contains(text(),"系列:")]/../a/text()'
     expr_cover = '//a[@class="bigImage"]/@href'
@@ -39,14 +39,14 @@ class Javbus(Parser):
                 result = self.dictformat(htmltree)
                 return result
             try:
-                self.detailurl = 'https://www.javbus.com/' + number
+                self.detailurl = 'https://www.javbus.com/en/' + number
                 self.htmlcode = self.getHtml(self.detailurl)
             except:
                 mirror_url = "https://www." + secrets.choice([
-                    'buscdn.fun', 'busdmm.fun', 'busfan.fun', 'busjav.fun',
-                    'cdnbus.fun',
-                    'dmmbus.fun', 'dmmsee.fun',
-                    'seedmm.fun',
+                    'buscdn.fun/en/', 'busdmm.fun/en/', 'busfan.fun/en/', 'busjav.fun/en/',
+                    'cdnbus.fun/en/',
+                    'dmmbus.fun/en/', 'dmmsee.fun/en/',
+                    'seedmm.fun/en/',
                     ]) + "/"
                 self.detailurl = mirror_url + number
                 self.htmlcode = self.getHtml(self.detailurl)
@@ -68,7 +68,7 @@ class Javbus(Parser):
         if self.specifiedUrl:
             self.detailurl = self.specifiedUrl
         else:
-            self.detailurl = 'https://www.javbus.red/' + w_number
+            self.detailurl = 'https://www.javbus.red/en/' + w_number
         self.htmlcode = self.getHtml(self.detailurl)
         if self.htmlcode == 404:
             return 404
@@ -91,10 +91,10 @@ class Javbus(Parser):
             return self.getTreeElement(htmltree, self.expr_studio)
 
     def getCover(self, htmltree):
-        return urljoin("https://www.javbus.com", super().getCover(htmltree)) 
+        return urljoin("https://www.javbus.com/en/", super().getCover(htmltree)) 
 
     def getRuntime(self, htmltree):
-        return super().getRuntime(htmltree).strip(" ['']分鐘")
+        return super().getRuntime(htmltree).strip(" ['']min")
 
     def getActors(self, htmltree):
         actors = super().getActors(htmltree)
@@ -111,7 +111,7 @@ class Javbus(Parser):
             if "nowprinting.gif" in p:
                 continue
             t = i.attrib['title']
-            d[t] = urljoin("https://www.javbus.com", p)
+            d[t] = urljoin("https://www.javbus.com/en/", p)
         return d
 
     def getDirector(self, htmltree):
@@ -128,11 +128,11 @@ class Javbus(Parser):
 
     def getTags(self, htmltree):
         tags = self.getTreeElement(htmltree, self.expr_tags).split(',')
-        return tags[2:]
+        return tags[1:]
 
     def getOutline(self, htmltree):
         if self.morestoryline:
-            if any(caller for caller in inspect.stack() if os.path.basename(caller.filename) == 'airav.py'):
+            if any(caller for caller in inspect.stack() if os.path.basename(caller.filename) == 'xcity.py'):
                 return ''   # 从airav.py过来的调用不计算outline直接返回，避免重复抓取数据拖慢处理速度
             from .storyline import getStoryline
             return getStoryline(self.number , uncensored = self.uncensored,

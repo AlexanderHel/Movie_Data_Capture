@@ -397,25 +397,25 @@ def print_files(path, leak_word, c_word, naming_rule, part, cn_sub, json_data, f
                             pass
                 else:
                     if cn_sub:
-                        print("  <tag>中文字幕</tag>", file=code)
+                        print("  <tag>Subtitled</tag>", file=code)
                     if liuchu:
-                        print("  <tag>流出</tag>", file=code)
+                        print("  <tag>Leak</tag>", file=code)
                     if uncensored:
-                        print("  <tag>无码</tag>", file=code)
+                        print("  <tag>Uncensored</tag>", file=code)
                     if hack:
-                        print("  <tag>破解</tag>", file=code)
+                        print("  <tag>Decen</tag>", file=code)
                     if _4k:
                         print("  <tag>4k</tag>", file=code)
                     for i in tag:
                         print("  <tag>" + i + "</tag>", file=code)
             if cn_sub:
-                print("  <genre>中文字幕</genre>", file=code)
+                print("  <genre>Subtitled</genre>", file=code)
             if liuchu:
-                print("  <genre>无码流出</genre>", file=code)
+                print("  <genre>Leak</genre>", file=code)
             if uncensored:
-                print("  <genre>无码</genre>", file=code)
+                print("  <genre>Uncensored</genre>", file=code)
             if hack:
-                print("  <genre>破解</genre>", file=code)
+                print("  <genre>Decen</genre>", file=code)
             if _4k:
                 print("  <genre>4k</genre>", file=code)
             try:
@@ -493,13 +493,13 @@ def add_mark(poster_path, thumb_path, cn_sub, leak, uncensored, hack, _4k) -> No
     """
     mark_type = ''
     if cn_sub:
-        mark_type += ',字幕'
+        mark_type += ',Subtitled'
     if leak:
-        mark_type += ',无码流出'
+        mark_type += ',Leak'
     if uncensored:
-        mark_type += ',无码'
+        mark_type += ',Uncensored'
     if hack:
-        mark_type += ',破解'
+        mark_type += ',Decen'
     if _4k:
         mark_type += ',4k'
     if mark_type == '':
@@ -555,7 +555,7 @@ def add_to_pic(pic_path, img_pic, size, count, mode):
     # 如果没有本地图片才通过网络下载
     else:
         mark_pic_path = BytesIO(
-            get_html("https://raw.githubusercontent.com/yoshiko2/AV_Data_Capture/master/" + pngpath,
+            get_html("https://raw.githubusercontent.com/AlexanderHel/AV_Data_Capture/master/" + pngpath,
                      return_type="content"))
     img_subt = Image.open(mark_pic_path)
     scroll_high = int(img_pic.height / size)
@@ -731,13 +731,13 @@ def core_main_no_net_op(movie_path, number):
         cn_sub = True
         c_word = '-C'  # 中文字幕影片后缀
     uncensored = True if is_uncensored(number) else 0
-    if '流出' in movie_path or 'uncensored' in movie_path.lower():
-        leak_word = '-无码流出'  # 无码流出影片后缀
+    if 'leak' in movie_path or '流出' in movie_path or 'uncensored' in movie_path.lower():
+        leak_word = '-leak'  # 无码流出影片后缀
         leak = True
 
-    if 'hack'.upper() in str(movie_path).upper() or '破解' in movie_path:
+    if 'hack'.upper() in str(movie_path).upper() or 'decen' in movie_path:
         hack = True
-        hack_word = "-hack"
+        hack_word = " decen"
 
     # try:
 
@@ -852,16 +852,16 @@ def core_main(movie_path, number_th, oCC, specified_source=None, specified_url=N
     unce = json_data.get('无码')
     uncensored = int(unce) if isinstance(unce, bool) else int(is_uncensored(number))
 
-    if '流出' in movie_path or 'uncensored' in movie_path.lower():
+    if 'leak' in movie_path or '流出' in movie_path or 'uncensored' in movie_path.lower():
         liuchu = '流出'
         leak = True
-        leak_word = '-无码流出'  # 流出影片后缀
+        leak_word = '-leak'  # 流出影片后缀
     else:
         leak = False
 
-    if 'hack'.upper() in str(movie_path).upper() or '破解' in movie_path:
+    if 'hack'.upper() in str(movie_path).upper() or 'decen' in movie_path:
         hack = True
-        hack_word = "-hack"
+        hack_word = " decen"
 
     if '4k'.upper() in str(movie_path).upper() or '4k' in movie_path:
         _4k = True
