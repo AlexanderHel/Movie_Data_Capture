@@ -24,7 +24,7 @@ from core import core_main, core_main_no_net_op, moveFailedFolder
 def check_update(local_version):
     htmlcode = ""
     try:
-        htmlcode = get_html("https://api.github.com/repos/yoshiko2/Movie_Data_Capture/releases/latest")
+        htmlcode = get_html("https://api.github.com/repos/AlexanderHel/Movie_Data_Capture/releases/latest")
     except:
         print("===== Failed to connect to github =====")
         print("========== AUTO EXIT IN 60s ===========")
@@ -36,7 +36,7 @@ def check_update(local_version):
     if local_version < remote:
         print("[*]" + ("* New update " + str(data["tag_name"]) + " *").center(54))
         print("[*]" + "↓ Download ↓".center(54))
-        print("[*]https://github.com/yoshiko2/Movie_Data_Capture/releases")
+        print("[*]https://github.com/AlexanderHel/Movie_Data_Capture/releases")
         print("[*]======================================================")
 
 
@@ -422,7 +422,7 @@ def movie_lists(source_folder, regexstr: str) -> typing.List[str]:
 
 def create_failed_folder(failed_folder: str):
     """
-    新建failed文件夹
+    Create new Failed folder
     """
     if not os.path.exists(failed_folder):
         try:
@@ -571,7 +571,7 @@ def main(args: tuple) -> Path:
         """
 
         """
-        return ('https://raw.githubusercontent.com/yoshiko2/Movie_Data_Capture/master/MappingTable/' + f,
+        return ('https://raw.githubusercontent.com/AlexanderHel/Movie_Data_Capture/master/MappingTable/' + f,
                 Path.home() / '.local' / 'share' / 'mdc' / f)
 
     map_tab = (fmd('mapping_actor.xml'), fmd('mapping_info.xml'), fmd('c_number.json'))
@@ -590,8 +590,8 @@ def main(args: tuple) -> Path:
     except Exception as e:
         print("[!] ==================== ERROR ====================")
         print("[!] " + "Mapping Table Download FAILED".center(47))
-        print("[!] " + "无法连接github".center(47))
-        print("[!] " + "请过几小时再试试".center(47))
+        print("[!] " + "Can't connect to github".center(47))
+        print("[!] " + "Try again later".center(47))
         print("[!]", e)
         print("[-] " + "------ AUTO EXIT AFTER 30s !!! ------ ".center(47))
         time.sleep(30)
