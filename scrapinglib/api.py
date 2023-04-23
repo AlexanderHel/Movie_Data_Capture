@@ -33,7 +33,7 @@ class Scraping:
     """
     adult_full_sources = ['javlibrary', 'javdb', 'javbus', 'airav', 'fanza', 'xcity', 'jav321',
                           'mgstage', 'fc2', 'avsox', 'dlsite', 'carib', 'madou',
-                          'getchu', 'gcolle', 'javday', 'pissplay', 'javmenu'
+                          'getchu', 'gcolle', 'javday', 'pissplay', 'javmenu', 'javct'
                           ]
 
     general_full_sources = ['tmdb', 'imdb']
@@ -89,7 +89,7 @@ class Scraping:
                         continue
                     json_data = json.loads(data)
                 except Exception as e:
-                    print('[!] 出错啦')
+                    print('[!] Error!')
                     print(e)
                     pass
                 # if any service return a valid return, break
@@ -128,7 +128,7 @@ class Scraping:
                         continue
                     json_data = json.loads(data)
                 except Exception as e:
-                    print('[!] 出错啦')
+                    print('[!] Error!')
                     print(e)
                     pass
                     # json_data = self.func_mapping[source](number, self)

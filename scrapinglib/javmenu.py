@@ -13,11 +13,11 @@ class Javmenu(Parser):
     expr_title = '/html/head/meta[@property="og:title"]/@content'
     expr_cover = '/html/head/meta[@property="og:image"]/@content'
 
-    expr_number = '//span[contains(text(),"番號") or contains(text(),"番号")]/../a/text()'
-    expr_number2 = '//span[contains(text(),"番號") or contains(text(),"番号")]/../span[2]/text()'
-    expr_runtime = '//span[contains(text(),"時長;") or contains(text(),"时长")]/../span[2]/text()'
-    expr_release = '//span[contains(text(),"日期")]/../span[2]/text()'
-    expr_studio = '//span[contains(text(),"製作")]/../span[2]/a/text()'
+    expr_number = '//span[contains(text(),"番號") or contains(text(),"Code")]/../a/text()'
+    expr_number2 = '//span[contains(text(),"番號") or contains(text(),"Code")]/../span[2]/text()'
+    expr_runtime = '//span[contains(text(),"時長;") or contains(text(),"Duration")]/../span[2]/text()'
+    expr_release = '//span[contains(text(),"Publish Date")]/../span[2]/text()'
+    expr_studio = '//span[contains(text(),"Publshier")]/../span[2]/a/text()'
 
     expr_actor = '//a[contains(@class,"actress")]/text()'
     expr_tags = '//a[contains(@class,"genre")]/text()'
