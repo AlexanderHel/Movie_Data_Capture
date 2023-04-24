@@ -139,7 +139,7 @@ G_cache_uncensored_conf = Cache_uncensored_conf()
 # ========================================================================是否为无码
 def is_uncensored(number) -> bool:
     if re.match(
-            r'[\d-]{4,}|\d{6}_\d{2,3}|(cz|gedo|k|n|red-|se)\d{2,4}|heyzo.+|xxx-av-.+|heydouga-.+|x-art\.\d{2}\.\d{2}\.\d{2}|H0930-.+|C0930-.+|',
+            r'[\d-]{4,}|\d{6}_\d{2,3}|(cz|gedo|k|n|red-|se)\d{2,4}|heyzo.+|xxx-av-.+|heydouga-.+|x-art\.\d{2}\.\d{2}\.\d{2}',
             number,
             re.I
     ):

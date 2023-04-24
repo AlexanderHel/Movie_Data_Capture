@@ -3,10 +3,12 @@
     "",
     "\\ImageProcessing",
     "\\Img",
+    "\\JAV_output",
     "\\MappingTable",
+    "\\readme",
     "\\scrapinglib",
     "\\wrapper"
   ],
-  "SelectedNode": "\\ImageProcessing\\__init__.py",
+  "SelectedNode": "\\README.md",
   "PreviewInSolutionExplorer": false
 }
