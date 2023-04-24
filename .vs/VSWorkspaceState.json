@@ -1,6 +1,12 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\ImageProcessing",
+    "\\Img",
+    "\\MappingTable",
+    "\\scrapinglib",
+    "\\wrapper"
   ],
+  "SelectedNode": "\\ImageProcessing\\__init__.py",
   "PreviewInSolutionExplorer": false
 }

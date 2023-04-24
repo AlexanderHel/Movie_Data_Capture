@@ -513,7 +513,7 @@ def add_mark_thread(pic_path, cn_sub, leak, uncensored, hack, _4k):
     size = 9
     # Due to jellyfin option enable, need a check for fanart.jpg
     if not os.path.exists(pic_path):
-        print("[!] There is no fanart.jpg")
+        print("[!]There is no fanart.jpg")
         return
     img_pic = Image.open(pic_path)
     # 获取自定义位置，取余配合pos达到顺时针添加的效果

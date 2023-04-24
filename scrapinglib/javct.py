@@ -19,11 +19,14 @@ class Javct(Parser):
     expr_actorphoto = '//div[@class="card__cover"]/img/@src'
     expr_tags = '//li[contains(span, "Categories")]/a/strong/text()'
 
-    def extraInit(self):
-        self.uncensored = True
-
     def search(self, number):
         self.number = number
+        if number.startswith("FC2-PPV-"):
+            self.number = "FC2PPV-" + number[8:]
+        elif number.startswith("FC2-"):
+            self.number = "FC2PPV-" + number[4:]
+        else:
+            self.number = number
         if self.specifiedUrl:
             self.detailurl = self.specifiedUrl
         else:
