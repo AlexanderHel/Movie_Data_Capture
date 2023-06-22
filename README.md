@@ -1,4 +1,4 @@
-English Data Capture fork for 
+English Data Capture fork for Movie Data Capture
 
 Naming Rules is a little different
 

@@ -4,6 +4,7 @@
 
 """
 
+import requests
 import json
 import os
 import re
@@ -23,10 +24,10 @@ from .httprequest import get_html_by_form, get_html_by_scraper, request_session
 # 舍弃 Amazon 源
 G_registered_storyline_site = {"airavwiki", "airav", "avno1", "xcity", "58avgo"}
 
-G_mode_txt = ('顺序执行','线程池')
+G_mode_txt = ('Sequential execution ', 'thread pool ')
 def is_japanese(raw: str) -> bool:
     """
-    日语简单检测
+    Japanese simple test
     """
     return bool(re.search(r'[\u3040-\u309F\u30A0-\u30FF\uFF66-\uFF9F]', raw, re.UNICODE))
 
@@ -39,7 +40,7 @@ class noThread(object):
         pass
 
 
-# 获取剧情介绍 从列表中的站点同时查，取值优先级从前到后
+# 获取剧情介绍 从列表中的站点同时查, 取值优先级从前到后
 def getStoryline(number, title=None, sites: list=None, uncensored=None, proxies=None, verify=None):
     start_time = time.time()
     debug = False
@@ -67,7 +68,7 @@ def getStoryline(number, title=None, sites: list=None, uncensored=None, proxies=
     sel = ''
 
     # 以下debug结果输出会写入日志
-    s = f'[!]Storyline{G_mode_txt[run_mode]}模式运行{len(sort_sites)}个任务共耗时(含启动开销){time.time() - start_time:.3f}秒，结束于{time.strftime("%H:%M:%S")}'
+    s = f'[!]Storyline {G_mode_txt[run_mode]} Mode Operation {len(sort_sites)} Total time spent on each task (including startup overhead) {time.time() - start_time:.3f} seconds, ended at {time.strftime("%H:%M:%S")}'
     sel_site = ''
     for site, desc in zip(sort_sites, results):
         if isinstance(desc, str) and len(desc):
@@ -78,7 +79,7 @@ def getStoryline(number, title=None, sites: list=None, uncensored=None, proxies=
                 sel_site, sel = site, desc
     for site, desc in zip(sort_sites, results):
         sl = len(desc) if isinstance(desc, str) else 0
-        s += f'，[选中{site}字数:{sl}]' if site == sel_site else f'，{site}字数:{sl}' if sl else f'，{site}:空'
+        s += f', [Selected {site} Words count: {sl}]' if site == sel_site else f', {site} Words count: {sl}' if sl else f', {site}: None'
     if config.getInstance().debug():
         print(s)
     return sel
@@ -103,11 +104,11 @@ def getStoryline_mp(args):
     if not debug:
         return storyline
     if config.getInstance().debug():
-        print("[!]MP 线程[{}]运行{:.3f}秒，结束于{}返回结果: {}".format(
+        print("[!]MP thread [{}] ran for {:.3f} seconds, ended in {} returned result: {}".format(
             site,
             time.time() - start_time,
             time.strftime("%H:%M:%S"),
-            storyline if isinstance(storyline, str) and len(storyline) else '[空]')
+            storyline if isinstance(storyline, str) and len(storyline) else '[None]')
         )
     return storyline
 
@@ -146,17 +147,33 @@ def getStoryline_airav(number, debug, proxies, verify):
         pass
     return None
 
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+}
+
+def search_storylineairavwiki(number):
+    url = f"https://en.airav.wiki/api/video/barcode/{number}"
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        json_response = response.json()
+        return json_response
+    else:
+        return None
 
 def getStoryline_airavwiki(number, debug, proxies, verify):
     try:
-        kwd = number[:6] if re.match(r'\d{6}[\-_]\d{2,3}', number) else number
-        airavwiki = Airav()
-        airavwiki.addtion_Javbus = False
-        airavwiki.proxies = proxies
-        airavwiki.verify = verify
-        jsons = airavwiki.search(kwd)
-        outline = json.loads(jsons).get('outline')
-        return outline
+        # Use the search function to retrieve the JSON response
+        json_response = search_storylineairavwiki(number)
+        
+        if json_response:
+            # Extract the description from the JSON response and decode it to UTF-8
+            description = json_response['result']['description']
+            outline = description
+            encoded_string = outline.encode('utf-8')
+            print(encoded_string)
+            return outline
+        else:
+            return ''
     except Exception as e:
         if debug:
             print(f"[-]MP def getStoryline_airavwiki Error: {e}, number [{number}].")
@@ -169,7 +186,7 @@ def getStoryline_58avgo(number, debug, proxies, verify):
         url = 'http://58avgo.com/cn/index.aspx' + secrets.choice([
                 '', '?status=3', '?status=4', '?status=7', '?status=9', '?status=10', '?status=11', '?status=12',
                 '?status=1&Sort=Playon', '?status=1&Sort=dateupload', 'status=1&Sort=dateproduce'
-        ]) # 随机选一个，避免网站httpd日志中单个ip的请求太过单一
+        ]) # 随机选一个, 避免网站httpd日志中单个ip的请求太过单一
         kwd = number[:6] if re.match(r'\d{6}[\-_]\d{2,3}', number) else number
         result, browser = get_html_by_form(url,
             fields = {'ctl00$TextBox_SearchKeyWord' : kwd},
@@ -237,7 +254,7 @@ def getStoryline_avno1OLD(number, debug, proxies, verify):  #获取剧情介绍 
         url = 'http://www.avno1.cc/cn/' + secrets.choice(['usercenter.php?item=' +
                 secrets.choice(['pay_support', 'qa', 'contact', 'guide-vpn']),
                 '?top=1&cat=hd', '?top=1', '?cat=hd', 'porn', '?cat=jp', '?cat=us', 'recommend_category.php'
-        ]) # 随机选一个，避免网站httpd日志中单个ip的请求太过单一
+        ]) # 随机选一个, 避免网站httpd日志中单个ip的请求太过单一
         result, browser = get_html_by_form(url,
             form_select='div.wrapper > div.header > div.search > form',
             fields = {'kw' : number},

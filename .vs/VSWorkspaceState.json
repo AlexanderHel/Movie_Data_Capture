@@ -1,14 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\ImageProcessing",
-    "\\Img",
-    "\\JAV_output",
-    "\\MappingTable",
-    "\\readme",
-    "\\scrapinglib",
-    "\\wrapper"
+    ""
   ],
-  "SelectedNode": "\\README.md",
+  "SelectedNode": "\\py_to_exe.ps1",
   "PreviewInSolutionExplorer": false
 }
