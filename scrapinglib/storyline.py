@@ -169,8 +169,6 @@ def getStoryline_airavwiki(number, debug, proxies, verify):
             # Extract the description from the JSON response and decode it to UTF-8
             description = json_response['result']['description']
             outline = description
-            encoded_string = outline.encode('utf-8')
-            print(encoded_string)
             return outline
         else:
             return ''

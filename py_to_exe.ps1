@@ -10,6 +10,8 @@ mkdir __pycache__
 
 pyinstaller --onefile Movie_Data_Capture.py `
     --hidden-import "ImageProcessing.cnn" `
+	--hidden-import "2to3" `
+    --hidden-import "lib2to3.pgen2.token" `
     --python-option u `
     --add-data "$FACE_RECOGNITION_MODELS;face_recognition_models" `
     --add-data "$CLOUDSCRAPER_PATH;cloudscraper" `
